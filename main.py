@@ -59,8 +59,8 @@ def create():
         try:
             photo_id = randint(0, 1000000)
             image = Image.open(BytesIO(bytearray(photo.read())))
-            image.save(f"templates/images/photo{photo_id}.png")
-            item = Item(title=title, price=price, photo=f"images/photo{photo_id}.png")
+            image.save(f"static/photo{photo_id}.png")
+            item = Item(title=title, price=price, photo=f"photo{photo_id}.png")
         except UnidentifiedImageError:
             return "Ошибка"
         try:

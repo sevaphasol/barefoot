@@ -19,7 +19,8 @@
         <div class="card-body">
           <h1 class="card-title pricing-card-title">{{ item.price }} <small class="text-muted">рублей</small></h1>
           <ul class="list-unstyled mt-3 mb-4">
-             <img src="{{ item.photo }}" alt="Автор не приложил фотографию" width="300" height="200">
+             <img src="{{ url_for('static', filename = item.photo) }}"
+                  alt="Автор не приложил фотографию" width="300" height="200">
           </ul>
             <form method="post">
                 <input type="text" class="form-control" name="delete" id="delete" placeholder="Удалить ... товар."><br>
