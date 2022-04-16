@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 from random import randint
 
@@ -36,6 +36,16 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/registration')
+def registration():
+    return render_template('registration.html')
+
+
+@app.route('/enter')
+def enter():
+    return render_template('enter.html')
+
+
 @app.route('/create', methods=['POST', 'GET'])
 def create():
     if request.method == "POST":
@@ -46,13 +56,13 @@ def create():
             price = int(price)
         except ValueError:
             return 'Ошибка'
-        if photo is not None:
+        try:
             photo_id = randint(0, 1000000)
             image = Image.open(BytesIO(bytearray(photo.read())))
             image.save(f"templates/images/photo{photo_id}.png")
             item = Item(title=title, price=price, photo=f"images/photo{photo_id}.png")
-        else:
-            item = Item(title=title, price=price, photo=None)
+        except UnidentifiedImageError:
+            return "Ошибка"
         try:
             db.session.add(item)
             db.session.commit()
@@ -61,6 +71,22 @@ def create():
             return "Ошибка"
     else:
         return render_template('create.html')
+
+
+@app.route('/delete', methods=['POST', 'GET'])
+def delete():
+    if request.method == "POST":
+        item = request.form['delete'].split()
+        if not(item[0] == "Удалить" or item[2] == "товар."):
+            return "Ошибка"
+        id_ = int(item[1])
+        Item.query.filter(Item.id == id_).delete()
+        db.session.commit()
+        items = Item.query.order_by(Item.price).all()
+        return render_template('delete.html', data=items)
+    else:
+        items = Item.query.order_by(Item.price).all()
+        return render_template('delete.html', data=items)
 
 
 @app.route('/buy/<int:item_id>')

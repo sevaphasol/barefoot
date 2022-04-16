@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>BareFoot</title>
+<title>Удаление товара</title>
 {% endblock %}
 
 {% block body %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <h1 class="display-4">BareFoot</h1>
-  <p class="lead">Здесь вы можете выбирать товар.</p>
+  <h1 class="display-4">Выберите товар, который хотите удалить.</h1>
 </div>
 
 <div class="container">
@@ -22,7 +21,10 @@
           <ul class="list-unstyled mt-3 mb-4">
              <img src="{{ item.photo }}" alt="Автор не приложил фотографию" width="300" height="200">
           </ul>
-          <a href="/buy/{{ item.id }}" class="btn btn-success">Купить</a>
+            <form method="post">
+                <input type="text" class="form-control" name="delete" id="delete" placeholder="Удалить ... товар."><br>
+                <button class="btn btn-danger" type="submit">Удалить {{item.id}} товар</button><br>
+            </form>
         </div>
     </div>
   {% endfor %}
