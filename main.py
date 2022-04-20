@@ -3,7 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 from random import randint
-
+from pathlib import Path
+from inspect import getframeinfo, currentframe
+from os import path
 from cloudipsp import Api, Checkout
 
 app = Flask(__name__)
@@ -59,7 +61,9 @@ def create():
         try:
             photo_id = randint(0, 1000000)
             image = Image.open(BytesIO(bytearray(photo.read())))
-            image.save(f"static/photo{photo_id}.png")
+            file_path = Path(path.dirname(path.abspath(getframeinfo(currentframe()).filename)),
+                             "static", f"photo{photo_id}.png")
+            image.save(file_path)
             item = Item(title=title, price=price, photo=f"photo{photo_id}.png")
         except UnidentifiedImageError:
             return "Ошибка"
